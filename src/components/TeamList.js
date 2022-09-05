@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
+import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
-export default function TeamList({teams, onTeamChanged}) {
+export default function TeamList({teams, initialTeam, onTeamChanged}) {
 
-    const [team, setTeam] = useState('')
+    const [team, setTeam] = useState(initialTeam)
 
     return (
-        <select value={team} onChange={handleValueChanged}>
-            <option id="None" value="">Select a team...</option>
-            {teams.sort((a, b) => a.City.localeCompare(b.City)).map(team =>
-                <option id={team.Key} value={team.Key}>{`${team.City} ${team.Name} (${team.Key})`}</option>
-            )}
-        </select>
+        <FormControl fullWidth>
+            <InputLabel id="team-list-label">Team</InputLabel>
+            <Select
+                labelId="team-list-label"
+                id="team-list"
+                value={team}
+                label="Team"
+                onChange={handleValueChanged}
+            >
+                <MenuItem id="None" value="">Select a team...</MenuItem>
+                {teams.sort((a, b) => a.City.localeCompare(b.City)).map(team =>
+                    <MenuItem key={team.Key} value={team.Key}>{`${team.City} ${team.Name} (${team.Key})`}</MenuItem>
+                )}
+
+            </Select>
+        </FormControl>
     )
 
     function handleValueChanged(event) {

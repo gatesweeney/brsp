@@ -1,13 +1,11 @@
-import './App.css';
 import React, { useEffect, useState } from 'react';
-import TeamList from "./components/TeamList";
 import SportsDataAccessor from "./network/SportsDataAccessor";
+import GameSelector from "./components/GameSelector";
 
 function App() {
 
   const [teams, setTeams] = useState([]);
   const [teamsLoaded, setTeamsLoaded] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState('');
 
   const sportsDataAccessor = new SportsDataAccessor()
 
@@ -23,18 +21,18 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div>
       {teamsLoaded ? (
           <div>
-            <TeamList
-                teams={teams}
-                onTeamChanged={team => {setSelectedTeam(team)}}
-            />
-            <p>Selected team: {selectedTeam}</p>
+            <GameSelector teams={teams} onSubmit={handleSubmit} />
           </div>
       ) : (<p>loading...</p>)}
     </div>
   );
+}
+
+function handleSubmit(homeTeam, awayTeam, gameDate) {
+  console.log(`Home team: ${homeTeam}, away team: ${awayTeam}, game date: ${gameDate}`)
 }
 
 export default App;
