@@ -1,27 +1,20 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
+import TeamList from "./components/TeamList";
+import SportsDataAccessor from "./network/SportsDataAccessor";
 
 function App() {
 
   const [teams, setTeams] = useState([]);
   const [teamsLoaded, setTeamsLoaded] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState('');
 
-  const fetchTeams = async () => {
-    try {
-      let response = await fetch('https://api.sportsdata.io/v3/mlb/scores/json/teams?key=787b53b6ed4648dcbc5c12c2b96d9c40');
-      let json = await response.json();
-      console.log(json)
-      return { success: true, data: json };
-    } catch (error) {
-      console.log(error);
-      return { success: false };
-    }
-  }
+  const sportsDataAccessor = new SportsDataAccessor()
 
   useEffect(() => {
     (async () => {
       setTeamsLoaded(false);
-      let res = await fetchTeams();
+      let res = await sportsDataAccessor.getActiveTeams();
       if (res.success) {
         setTeams(res.data);
         setTeamsLoaded(true);
@@ -32,11 +25,13 @@ function App() {
   return (
     <div className="App">
       {teamsLoaded ? (
-        <ul>
-          {teams.map(team => 
-            <li key={team.TeamID}>{team.Key}</li>
-          )}
-        </ul>
+          <div>
+            <TeamList
+                teams={teams}
+                onTeamChanged={team => {setSelectedTeam(team)}}
+            />
+            <p>Selected team: {selectedTeam}</p>
+          </div>
       ) : (<p>loading...</p>)}
     </div>
   );
