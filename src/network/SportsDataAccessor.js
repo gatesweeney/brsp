@@ -22,6 +22,18 @@ export default class SportsDataAccessor {
         }
     }
 
+    async getRoster(teamKey) {
+        try {
+            let response = await fetch(this.#buildUri(`mlb/scores/json/Players/${teamKey}`))
+            let json = await response.json();
+            console.log(`Get team players response: ${json}`)
+            return { success: true, data: json };
+        } catch (error) {
+            console.log(error);
+            return { success: false };
+        }
+    }
+
     #buildUri(path) {
         return `${this.#baseUri}${path}?key=${this.#key}`
     }

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
-export default function TeamList({teams, initialTeam, onTeamChanged}) {
+export default function TeamList({teams, initialTeam, placeholder, onTeamChanged}) {
 
     const [team, setTeam] = useState(initialTeam)
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="team-list-label">Team</InputLabel>
+            <InputLabel id="team-list-label">{placeholder}</InputLabel>
             <Select
                 labelId="team-list-label"
                 id="team-list"
                 value={team}
-                label="Team"
+                label={placeholder}
                 onChange={handleValueChanged}
             >
                 <MenuItem id="None" value="">Select a team...</MenuItem>

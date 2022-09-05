@@ -13,36 +13,28 @@ export default function GameSelector({teams, onSubmit}) {
     const [gameDate, setGameDate] = useState(moment())
 
     return (
-        <Grid container rowSpacing={2}>
-            <Grid item xs={4}>
-                <p>Home Team</p>
-            </Grid>
-            <Grid item xs={8}>
-                <TeamList teams={teams} initialTeam={homeTeam} onTeamChanged={team => {
+        <Grid container rowSpacing={2} columnSpacing={2} columns={14} alignItems="center">
+            <Grid item xs={14} lg={4}>
+                <TeamList teams={teams} initialTeam={homeTeam} placeholder="Away team" onTeamChanged={team => {
                     handleTeamChanged("home", team)
                 }} />
             </Grid>
-            <Grid item xs={4}>
-                <p>Away Team</p>
-            </Grid>
-            <Grid item xs={8}>
-                <TeamList teams={teams} initialTeam={awayTeam} onTeamChanged={team => {
+            <Grid item xs={14} lg={4}>
+                <TeamList teams={teams} initialTeam={awayTeam} placeholder="Home team" onTeamChanged={team => {
                     handleTeamChanged("away", team)
                 }} />
             </Grid>
-            <Grid item xs={4}>
-                <p>Game Date</p>
-            </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={14} lg={4}>
                 <DatePicker
                     label="Game Date"
+                    fullWidth
                     value={gameDate}
                     onChange={setGameDate}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField fullWidth {...params} />}
                 />
             </Grid>
-            <Grid item xs={12}>
-                <Button variant="contained" onClick={handleSubmit} fullWidth>Submit</Button>
+            <Grid item xs={14} lg={2}>
+                <Button variant="contained" size="large" onClick={handleSubmit} fullWidth>Submit</Button>
             </Grid>
         </Grid>
     )
