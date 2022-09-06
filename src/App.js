@@ -4,6 +4,8 @@ import GameSelector from "./components/GameSelector";
 import TeamRosterTable from "./components/TeamRosterTable";
 import Grid from "@mui/material/Grid";
 
+const sportsDataAccessor = new SportsDataAccessor()
+
 function App() {
 
   const [teams, setTeams] = useState([]);
@@ -11,8 +13,6 @@ function App() {
   const [homeTeamRoster, setHomeTeamRoster] = useState([]);
   const [awayTeamRoster, setAwayTeamRoster] = useState([]);
   const [gameDate, setGameDate] = useState()
-
-  const sportsDataAccessor = new SportsDataAccessor()
 
   async function handleSubmit(homeTeam, awayTeam, gameDate) {
     const home = await sportsDataAccessor.getRoster(homeTeam)
@@ -29,6 +29,7 @@ function App() {
   useEffect(() => {
     (async () => {
       setTeamsLoaded(false);
+      sportsDataAccessor.setLeague("nfl")
       let res = await sportsDataAccessor.getActiveTeams();
       if (res.success) {
         setTeams(res.data);

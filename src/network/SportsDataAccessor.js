@@ -2,17 +2,17 @@
 export default class SportsDataAccessor {
 
     #baseUri
-    #key
+    #league
 
     constructor() {
         this.#baseUri = 'https://api.sportsdata.io/v3/'
-        this.#key = '787b53b6ed4648dcbc5c12c2b96d9c40' // TODO: move to env
+        this.#league = "mlb"
     }
 
 
     async getActiveTeams() {
         try {
-            let response = await fetch(this.#buildUri('mlb/scores/json/teams'));
+            let response = await fetch(this.#buildUri('scores/json/teams'));
             let json = await response.json();
             console.log(`Get active teams response: ${json}`)
             return { success: true, data: json };
@@ -24,7 +24,7 @@ export default class SportsDataAccessor {
 
     async getRoster(teamKey) {
         try {
-            let response = await fetch(this.#buildUri(`mlb/scores/json/Players/${teamKey}`))
+            let response = await fetch(this.#buildUri(`scores/json/Players/${teamKey}`))
             let json = await response.json();
             console.log(`Get team players response: ${json}`)
             return { success: true, data: json };
@@ -34,8 +34,19 @@ export default class SportsDataAccessor {
         }
     }
 
+    setLeague(league) {
+        this.#league = league
+    }
+
     #buildUri(path) {
-        return `${this.#baseUri}${path}?key=${this.#key}`
+        return `${this.#baseUri}${this.#league}/${path}?key=${this.#getKey()}`
+    }
+
+    #getKey() {
+        switch (this.#league) {
+            case "mlb": return '787b53b6ed4648dcbc5c12c2b96d9c40'
+            case "nfl": return '1f19dedb48fa4c5993cb1f66fb686294'
+        }
     }
 
 }
