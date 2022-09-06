@@ -10,6 +10,7 @@ function App() {
   const [teamsLoaded, setTeamsLoaded] = useState(false);
   const [homeTeamRoster, setHomeTeamRoster] = useState([]);
   const [awayTeamRoster, setAwayTeamRoster] = useState([]);
+  const [gameDate, setGameDate] = useState()
 
   const sportsDataAccessor = new SportsDataAccessor()
 
@@ -22,6 +23,7 @@ function App() {
     if (away.success) {
       setAwayTeamRoster(away.data)
     }
+    setGameDate(gameDate)
   }
 
   useEffect(() => {
@@ -45,12 +47,12 @@ function App() {
             <Grid xs={12} item>
               <h2>Home Team</h2>
               <br />
-              <TeamRosterTable roster={homeTeamRoster} />
+              <TeamRosterTable roster={homeTeamRoster} gameDate={gameDate} />
             </Grid>
             <Grid xs={12} item>
               <h2>Away Team</h2>
               <br />
-              <TeamRosterTable roster={awayTeamRoster} />
+              <TeamRosterTable roster={awayTeamRoster} gameDate={gameDate} />
             </Grid>
           </Grid>
       ) : (<p>loading...</p>)}

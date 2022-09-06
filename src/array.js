@@ -90,3 +90,9 @@ const iRhythm = [
     {display:'- ↑ Lo ', value:1.00},
     {display:'CRIT', value:0.00}
 ];
+
+module.exports = {
+    pRhythm,
+    eRhythm,
+    iRhythm
+}
