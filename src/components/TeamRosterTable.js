@@ -6,9 +6,9 @@ import {eRhythm, iRhythm, pRhythm} from "../array";
 
 export default function TeamRosterTable({roster, gameDate}) {
 
-    const physicalPeriod = pRhythm.length
-    const emotionalPeriod = eRhythm.length
-    const intellectualPeriod = iRhythm.length
+    const physicalPeriod = 23;
+    const emotionalPeriod = 28;
+    const intellectualPeriod = 33;
 
     //Alternating Row Styling
     const ODD_OPACITY = 0.2;
@@ -71,6 +71,7 @@ export default function TeamRosterTable({roster, gameDate}) {
         { field: 'iRhythm', headerName: 'Intellectual', flex: 1, renderCell: params => getBiorhythmStatus("I", params.row) },
     ];
 
+
     function getFullName(params) {
         return `${params.row.LastName || ''}, ${params.row.FirstName || ''}`;
     }
@@ -99,6 +100,7 @@ export default function TeamRosterTable({roster, gameDate}) {
             return values[index].display
         }
     }
+
     
 
     return (
