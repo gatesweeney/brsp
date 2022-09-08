@@ -29,7 +29,7 @@ function App() {
   useEffect(() => {
     (async () => {
       setTeamsLoaded(false);
-      sportsDataAccessor.setLeague("nfl")
+      sportsDataAccessor.setLeague("mlb")
       let res = await sportsDataAccessor.getActiveTeams();
       if (res.success) {
         setTeams(res.data);
