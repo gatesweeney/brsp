@@ -1,5 +1,6 @@
 import {Avatar, CardHeader, Typography} from "@mui/material";
-import {DataGrid} from "@mui/x-data-grid";
+import { alpha, styled } from '@mui/material/styles';
+import {DataGrid, gridClasses} from "@mui/x-data-grid";
 import moment from "moment";
 import {eRhythm, iRhythm, pRhythm} from "../array";
 
@@ -9,6 +10,41 @@ export default function TeamRosterTable({roster, gameDate}) {
     const emotionalPeriod = eRhythm.length
     const intellectualPeriod = iRhythm.length
 
+    //Alternating Row Styling
+    const ODD_OPACITY = 0.2;
+    const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+        [`& .${gridClasses.row}.even`]: {
+          backgroundColor: theme.palette.grey[200],
+          '&:hover, &.Mui-hovered': {
+            backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
+            '@media (hover: none)': {
+              backgroundColor: 'transparent',
+            },
+          },
+          '&.Mui-selected': {
+            backgroundColor: alpha(
+              theme.palette.primary.main,
+              ODD_OPACITY + theme.palette.action.selectedOpacity,
+            ),
+            '&:hover, &.Mui-hovered': {
+              backgroundColor: alpha(
+                theme.palette.primary.main,
+                ODD_OPACITY +
+                  theme.palette.action.selectedOpacity +
+                  theme.palette.action.hoverOpacity,
+              ),
+              // Reset on touch devices, it doesn't add specificity
+              '@media (hover: none)': {
+                backgroundColor: alpha(
+                  theme.palette.primary.main,
+                  ODD_OPACITY + theme.palette.action.selectedOpacity,
+                ),
+              },
+            },
+          },
+        },
+      }));
+
     const rows = roster.map(player => {
         return {
             id: player.PlayerID,
@@ -17,20 +53,22 @@ export default function TeamRosterTable({roster, gameDate}) {
     })
 
     const columns = [
-        { field: 'player', headerName: 'Player', width: 250, renderCell: params => (
-            <CardHeader
-                avatar={<Avatar alt={getFullName(params)} src={params.row.PhotoUrl} />}
-                title={getFullName(params)}
-            />
-        )},
+        { field: 'player', headerName: 'Player', flex: 1, renderCell: params => getFullName(params)
+        //(       <CardHeader
+                //avatar={<Avatar alt={getFullName(params)} src={params.row.PhotoUrl} />}
+                //title={getFullName(params)}
+        //    />
+            
+        //)
+        },
         { field: 'BirthDate', headerName: 'Birth Date', width: 120, valueFormatter: params => {
             return moment(params.value).format("MMM DD, YYYY")
         }},
-        { field: 'Position', headerName: 'Position', width: 80 },
-        { field: 'Status', headerName: 'Status', width: 120 },
-        { field: 'pRhythm', headerName: 'Physical', width: 150, renderCell: params => getBiorhythmStatus("P", params.row) },
-        { field: 'eRhythm', headerName: 'Emotional', width: 150, renderCell: params => getBiorhythmStatus("E", params.row) },
-        { field: 'iRhythm', headerName: 'Intellectual', width: 150, renderCell: params => getBiorhythmStatus("I", params.row) },
+        { field: 'Position', headerName: 'Position', flex: 1 },
+        { field: 'Status', headerName: 'Status', flex: 1 },
+        { field: 'pRhythm', headerName: 'Physical', flex: 1, renderCell: params => getBiorhythmStatus("P", params.row) },
+        { field: 'eRhythm', headerName: 'Emotional', flex: 1, renderCell: params => getBiorhythmStatus("E", params.row) },
+        { field: 'iRhythm', headerName: 'Intellectual', flex: 1, renderCell: params => getBiorhythmStatus("I", params.row) },
     ];
 
     function getFullName(params) {
@@ -40,6 +78,7 @@ export default function TeamRosterTable({roster, gameDate}) {
     function getBiorhythmStatus(type, player) {
         let period = 0;
         let values = [];
+        // eslint-disable-next-line default-case
         switch (type) {
             case "P":
                 period = physicalPeriod
@@ -64,8 +103,9 @@ export default function TeamRosterTable({roster, gameDate}) {
 
     return (
         <div style={{ }}>
-            <DataGrid 
+            <StripedDataGrid 
             autoHeight
+            rowHeight={25}
             columns={columns} rows={rows}
 
             filterModel={{
@@ -73,6 +113,10 @@ export default function TeamRosterTable({roster, gameDate}) {
                   { columnField: 'Status', operatorValue: 'contains', value: 'Active' }
                 ],
               }}
+
+            getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+            }
 
             />
         </div>

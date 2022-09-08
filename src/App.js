@@ -42,16 +42,16 @@ function App() {
   return (
     <div>
       {teamsLoaded ? (
-          <Grid xs={12} container rowSpacing={2}>
-            <Grid xs={12} item>
+          <Grid xs={12} container flexGrow={1} rowSpacing={2}>
+            <Grid xs={12} flexGrow={1} item>
               <GameSelector teams={teams} onSubmit={handleSubmit} />
             </Grid>
-            <Grid xs={12} item>
+            <Grid xs={12} flexGrow={1} item>
               <h2>Home Team</h2>
               <br />
               <TeamRosterTable roster={homeTeamRoster} gameDate={gameDate} />
             </Grid>
-            <Grid xs={12} item>
+            <Grid xs={12} flexGrow={1} item>
               <h2>Away Team</h2>
               <br />
               <TeamRosterTable roster={awayTeamRoster} gameDate={gameDate} />

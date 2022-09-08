@@ -7,6 +7,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Adds Full Width to Grid */
+.MuiGrid-root {
+  max-width: 100%!important;
+  flex-grow: 1!important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
