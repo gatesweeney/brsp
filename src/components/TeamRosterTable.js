@@ -63,8 +63,9 @@ export default function TeamRosterTable({roster, gameDate}) {
     
 
     return (
-        <div style={{ height: 500 }}>
+        <div style={{ }}>
             <DataGrid 
+            autoHeight
             columns={columns} rows={rows}
 
             filterModel={{

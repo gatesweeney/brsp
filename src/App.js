@@ -57,7 +57,7 @@ function App() {
               <TeamRosterTable roster={awayTeamRoster} gameDate={gameDate} />
             </Grid>
           </Grid>
-      ) : (<p>loading...</p>)}
+      ) : (<p>Please wait, Loading the application...</p>)}
     </div>
   );
 }
