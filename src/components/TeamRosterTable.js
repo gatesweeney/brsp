@@ -60,10 +60,20 @@ export default function TeamRosterTable({roster, gameDate}) {
             return values[index].display
         }
     }
+    
 
     return (
         <div style={{ height: 500 }}>
-            <DataGrid columns={columns} rows={rows} />
+            <DataGrid 
+            columns={columns} rows={rows}
+
+            filterModel={{
+                items: [
+                  { columnField: 'Status', operatorValue: 'contains', value: 'Active' }
+                ],
+              }}
+
+            />
         </div>
     )
 }
