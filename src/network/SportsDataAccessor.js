@@ -48,6 +48,7 @@ export default class SportsDataAccessor {
         switch (this.#league) {
             case "mlb": return '787b53b6ed4648dcbc5c12c2b96d9c40'
             case "nfl": return '1f19dedb48fa4c5993cb1f66fb686294'
+            case "nba": return 'a8b21e680c5e44f09c3e9666a97b1701'
         }
     }
 

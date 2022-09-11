@@ -110,6 +110,7 @@ function App() {
 
   return (
     <div>
+      <h1>Biorhythm Sports Predicting</h1>
       {teamsLoaded ? (
           <Grid xs={12} container flexGrow={1} rowSpacing={2}>
             <Grid xs={12} flexGrow={1} item>
