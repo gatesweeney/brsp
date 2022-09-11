@@ -69,6 +69,7 @@ export default function TeamRosterTable({roster, gameDate}) {
         { field: 'pRhythm', headerName: 'Physical', flex: 1, renderCell: params => getBiorhythmStatus("P", params.row) },
         { field: 'eRhythm', headerName: 'Emotional', flex: 1, renderCell: params => getBiorhythmStatus("E", params.row) },
         { field: 'iRhythm', headerName: 'Intellectual', flex: 1, renderCell: params => getBiorhythmStatus("I", params.row) },
+        { field: 'pAverage', headerName: 'Average', flex: 1, renderCell: params => ((getBiorhythmValue("P", params.row) + getBiorhythmValue("E", params.row) + getBiorhythmValue("I", params.row))/3).toFixed(2) }
     ];
 
 
@@ -100,6 +101,32 @@ export default function TeamRosterTable({roster, gameDate}) {
             return values[index].display
         }
     }
+
+    function getBiorhythmValue(type, player) {
+      let period = 0;
+      let values = [];
+      // eslint-disable-next-line default-case
+      switch (type) {
+          case "P":
+              period = physicalPeriod
+              values = pRhythm
+              break
+          case "E":
+              period = emotionalPeriod
+              values = eRhythm
+              break
+          case "I":
+              period = intellectualPeriod
+              values = iRhythm
+              break
+      }
+      const durationSinceBirth = moment.duration(gameDate.diff(moment(player.BirthDate)))
+      const index = Math.floor(durationSinceBirth.asDays() % period)
+      if (player.BirthDate && values.length > 0) {
+          return values[index].value
+      }
+  }
+
 
     
 

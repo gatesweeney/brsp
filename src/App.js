@@ -82,7 +82,7 @@ function App() {
   const [homeTeamRoster, setHomeTeamRoster] = useState([]);
   const [awayTeamRoster, setAwayTeamRoster] = useState([]);
   const [gameDate, setGameDate] = useState();
-  console.log(leagueID);
+  console.log(`Current League: ${leagueID}`);
 
   async function handleSubmit(homeTeam, awayTeam, gameDate) {
     const home = await sportsDataAccessor.getRoster(homeTeam)
