@@ -3,6 +3,9 @@ import SportsDataAccessor from "./network/SportsDataAccessor";
 import GameSelector from "./components/GameSelector";
 import TeamRosterTable from "./components/TeamRosterTable";
 import Grid from "@mui/material/Grid";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+//import $ from "jquery";
 
 const sportsDataAccessor = new SportsDataAccessor()
 let leagueID = 'mlb';
@@ -74,6 +77,19 @@ function getAllUrlParams(url) {
 
 leagueID = getAllUrlParams().league;
 
+function defaultReroute() {
+  if (leagueID === undefined) {
+
+    var url = window.location.href;    
+
+    url += '?league=mlb'
+
+    window.location.href = url;
+      }
+}
+
+defaultReroute();
+
 
 function App() {
 
@@ -111,8 +127,18 @@ function App() {
   return (
     <div>
       <h1>Biorhythm Sports Predicting</h1>
+      
+
       {teamsLoaded ? (
           <Grid xs={12} container flexGrow={1} rowSpacing={2}>
+            <Grid xs={14} flexGrow={1} lg={4} item>
+              <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                  <Button href="/?league=mlb">MLB</Button>
+                  <Button href="/?league=nfl">NFL</Button>
+                  <Button href="/?league=nba">NBA</Button>
+              </ButtonGroup>
+
+            </Grid>
             <Grid xs={12} flexGrow={1} item>
               <GameSelector teams={teams} onSubmit={handleSubmit} />
             </Grid>
