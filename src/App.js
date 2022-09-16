@@ -85,7 +85,7 @@ function defaultReroute() {
     url += '?league=mlb'
 
     window.location.href = url;
-      }
+  }
 }
 
 defaultReroute();
@@ -112,6 +112,11 @@ function App() {
     setGameDate(gameDate)
   }
 
+  var h1id = leagueID;
+
+  //document.getElementsByClassName("title-heading")[0].innerHTML = leagueID;
+
+
   useEffect(() => {
     (async () => {
       setTeamsLoaded(false);
@@ -126,7 +131,7 @@ function App() {
 
   return (
     <div>
-      <h1>Biorhythm Sports Predicting</h1>
+      <h1 class="title-heading"></h1>
       
 
       {teamsLoaded ? (

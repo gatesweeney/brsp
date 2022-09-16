@@ -1,8 +1,11 @@
-import {Avatar, CardHeader, Typography} from "@mui/material";
+//import {Avatar, CardHeader, Typography} from "@mui/material";
 import { alpha, styled } from '@mui/material/styles';
-import {DataGrid, gridClasses} from "@mui/x-data-grid";
+import {DataGrid, gridClasses, GridToolbar} from "@mui/x-data-grid";
 import moment from "moment";
 import {eRhythm, iRhythm, pRhythm} from "../array";
+import { GridCsvExportOptions } from '@mui/x-data-grid';
+import { GridPrintExportOptions } from '@mui/x-data-grid';
+
 
 export default function TeamRosterTable({roster, gameDate}) {
 
@@ -53,7 +56,7 @@ export default function TeamRosterTable({roster, gameDate}) {
     })
 
     const columns = [
-        { field: 'player', headerName: 'Player', flex: 1, renderCell: params => getFullName(params)
+        { field: 'player', headerName: 'Player', width: 150, renderCell: params => getFullName(params)
         //(       <CardHeader
                 //avatar={<Avatar alt={getFullName(params)} src={params.row.PhotoUrl} />}
                 //title={getFullName(params)}
@@ -61,15 +64,15 @@ export default function TeamRosterTable({roster, gameDate}) {
             
         //)
         },
-        { field: 'BirthDate', headerName: 'Birth Date', width: 120, valueFormatter: params => {
+        { field: 'BirthDate', disableExport: true, headerName: 'Birth Date', width: 120, valueFormatter: params => {
             return moment(params.value).format("MMM DD, YYYY")
         }},
-        { field: 'Position', headerName: 'Position', flex: 1 },
-        { field: 'Status', headerName: 'Status', flex: 1 },
-        { field: 'pRhythm', headerName: 'Physical', flex: 1, renderCell: params => getBiorhythmStatus("P", params.row) },
-        { field: 'eRhythm', headerName: 'Emotional', flex: 1, renderCell: params => getBiorhythmStatus("E", params.row) },
-        { field: 'iRhythm', headerName: 'Intellectual', flex: 1, renderCell: params => getBiorhythmStatus("I", params.row) },
-        { field: 'pAverage', headerName: 'Average', flex: 1, renderCell: params => ((getBiorhythmValue("P", params.row) + getBiorhythmValue("E", params.row) + getBiorhythmValue("I", params.row))/3).toFixed(2) }
+        { field: 'Position', headerName: 'Position', width: 10 },
+        { field: 'Status', disableExport: true, resizable: true, headerName: 'Status', width: 60 },
+        { field: 'pRhythm', headerName: 'Physical', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("P", params.row) },
+        { field: 'eRhythm', headerName: 'Emotional', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("E", params.row) },
+        { field: 'iRhythm', headerName: 'Intellectual', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("I", params.row) },
+        { field: 'pAverage', headerName: 'Average', resizable: true, width: 120, renderCell: params => ((getBiorhythmValue("P", params.row) + getBiorhythmValue("E", params.row) + getBiorhythmValue("I", params.row))/3).toFixed(2) }
     ];
 
 
@@ -133,6 +136,7 @@ export default function TeamRosterTable({roster, gameDate}) {
     return (
         <div style={{ }}>
             <StripedDataGrid 
+            components={{ Toolbar: GridToolbar }}
             autoHeight
             rowHeight={25}
             columns={columns} rows={rows}
