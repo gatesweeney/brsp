@@ -1,10 +1,7 @@
-//import {Avatar, CardHeader, Typography} from "@mui/material";
 import { alpha, styled } from '@mui/material/styles';
 import {DataGrid, gridClasses, GridToolbar} from "@mui/x-data-grid";
 import moment from "moment";
 import {eRhythm, iRhythm, pRhythm} from "../array";
-import { GridCsvExportOptions } from '@mui/x-data-grid';
-import { GridPrintExportOptions } from '@mui/x-data-grid';
 
 
 export default function TeamRosterTable({roster, gameDate}) {
@@ -59,59 +56,27 @@ export default function TeamRosterTable({roster, gameDate}) {
         }
     })
 
-    function customComparator(type) {
-        switch (type) {
-            case "P": return (v1, v2) => v1.pValue.value - v2.pValue.value;
-            case "E": return (v1, v2) => v1.eValue.value - v2.eValue.value;
-            case "I": return (v1, v2) => v1.iValue.value - v2.iValue.value;
-        }
+    function customComparator(v1, v2) {
+        return sortableValue(v1).localeCompare(sortableValue(v2))
+    }
+
+    function sortableValue(value) {
+        if (value === "UNKNOWN") return "ZZZ"
+        if (value === "CRIT") return "0"
+        return value
     }
 
     const columns = [
-        { field: 'player', headerName: 'Player', width: 150, renderCell: params => getFullName(params)
-        //(       <CardHeader
-                //avatar={<Avatar alt={getFullName(params)} src={params.row.PhotoUrl} />}
-                //title={getFullName(params)}
-        //    />
-            
-        //)
-        },
+        { field: 'player', headerName: 'Player', width: 150, renderCell: params => getFullName(params) },
         { field: 'BirthDate', disableExport: true, headerName: 'Birth Date', width: 120, valueFormatter: params => {
             return moment(params.value).format("MMM DD, YYYY")
         }},
         { field: 'Position', headerName: 'Position', width: 10 },
         { field: 'Status', disableExport: true, resizable: true, headerName: 'Status', width: 60 },
-        {
-            field: 'pRhythm',
-            headerName: 'Physical',
-            resizable: true,
-            width: 120,
-            sortComparator: customComparator("P"),
-            renderCell: params => params.row.pValue.display
-        },
-        {
-            field: 'eRhythm',
-            headerName: 'Emotional',
-            resizable: true,
-            width: 120,
-            sortComparator: customComparator("E"),
-            renderCell: params => params.row.eValue.display
-        },
-        {
-            field: 'iRhythm',
-            headerName: 'Intellectual',
-            resizable: true,
-            width: 120,
-            sortComparator: customComparator("I"),
-            renderCell: params => params.row.iValue.display
-        },
-        {
-            field: 'pAverage',
-            headerName: 'Average',
-            resizable: true,
-            width: 120,
-            renderCell: params => getAverage(params.row).toFixed(2)
-        }
+        { field: 'pRhythm', headerName: 'Physical', resizable: true, width: 120, ortComparator: customComparator, valueGetter: params => params.row.pValue.display },
+        { field: 'eRhythm', headerName: 'Emotional', resizable: true, width: 120, sortComparator: customComparator, valueGetter: params => params.row.eValue.display },
+        { field: 'iRhythm', headerName: 'Intellectual', resizable: true, width: 120, sortComparator: customComparator, valueGetter: params => params.row.iValue.display },
+        { field: 'pAverage', headerName: 'Average', resizable: true, width: 120, sortComparator: customComparator, valueGetter: params => params.row.avg.toFixed(2) }
     ];
 
 
@@ -142,6 +107,7 @@ export default function TeamRosterTable({roster, gameDate}) {
         if (player.BirthDate && values.length > 0) {
             return values[index]
         }
+        return { display: "UNKNOWN", value: null }
     }
 
     function average(array) {
