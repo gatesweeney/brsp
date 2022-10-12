@@ -111,11 +111,6 @@ export default function TeamRosterTable({roster, gameDate}) {
         return average(["P", "E", "I"].flatMap(type => getBiorhythmStatus(type, player).value ?? []));
     }
 
-  }
-
-
-    
-
     return (
         <div style={{ }}>
             <StripedDataGrid 
