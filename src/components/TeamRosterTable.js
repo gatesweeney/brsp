@@ -143,7 +143,7 @@ export default function TeamRosterTable({roster, gameDate}) {
 
             filterModel={{
                 items: [
-                  { columnField: 'Status', operatorValue: 'contains', value: 'Active' }
+                  //{ columnField: 'Status', operatorValue: 'contains', value: 'Active' }
                 ],
               }}
 
