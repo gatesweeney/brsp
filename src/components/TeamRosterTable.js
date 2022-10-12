@@ -51,9 +51,21 @@ export default function TeamRosterTable({roster, gameDate}) {
     const rows = roster.map(player => {
         return {
             id: player.PlayerID,
+            pValue: getBiorhythmStatus("P", player),
+            eValue: getBiorhythmStatus("E", player),
+            iValue: getBiorhythmStatus("I", player),
+            avg: getAverage(player),
             ...player
         }
     })
+
+    function customComparator(type) {
+        switch (type) {
+            case "P": return (v1, v2) => v1.pValue.value - v2.pValue.value;
+            case "E": return (v1, v2) => v1.eValue.value - v2.eValue.value;
+            case "I": return (v1, v2) => v1.iValue.value - v2.iValue.value;
+        }
+    }
 
     const columns = [
         { field: 'player', headerName: 'Player', width: 150, renderCell: params => getFullName(params)
@@ -69,10 +81,37 @@ export default function TeamRosterTable({roster, gameDate}) {
         }},
         { field: 'Position', headerName: 'Position', width: 10 },
         { field: 'Status', disableExport: true, resizable: true, headerName: 'Status', width: 60 },
-        { field: 'pRhythm', headerName: 'Physical', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("P", params.row).display },
-        { field: 'eRhythm', headerName: 'Emotional', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("E", params.row).display },
-        { field: 'iRhythm', headerName: 'Intellectual', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("I", params.row).display },
-        { field: 'pAverage', headerName: 'Average', resizable: true, width: 120, renderCell: params => getAverage(params.row).toFixed(2) }
+        {
+            field: 'pRhythm',
+            headerName: 'Physical',
+            resizable: true,
+            width: 120,
+            sortComparator: customComparator("P"),
+            renderCell: params => params.row.pValue.display
+        },
+        {
+            field: 'eRhythm',
+            headerName: 'Emotional',
+            resizable: true,
+            width: 120,
+            sortComparator: customComparator("E"),
+            renderCell: params => params.row.eValue.display
+        },
+        {
+            field: 'iRhythm',
+            headerName: 'Intellectual',
+            resizable: true,
+            width: 120,
+            sortComparator: customComparator("I"),
+            renderCell: params => params.row.iValue.display
+        },
+        {
+            field: 'pAverage',
+            headerName: 'Average',
+            resizable: true,
+            width: 120,
+            renderCell: params => getAverage(params.row).toFixed(2)
+        }
     ];
 
 
@@ -105,10 +144,15 @@ export default function TeamRosterTable({roster, gameDate}) {
         }
     }
 
-    const average = array => array.reduce((a, b) => a + b) / array.length;
+    function average(array) {
+        if (array == undefined || array.length === 0) {
+            return 0;
+        }
+        return array.reduce((a, b) => a + b) / array.length;
+    }
 
     function getAverage(player) {
-        return average(["P", "E", "I"].flatMap(type => getBiorhythmStatus(type, player).value ?? []));
+        return average(["P", "E", "I"].flatMap(type => getBiorhythmStatus(type, player)?.value ?? [])) ?? 0;
     }
 
     return (
