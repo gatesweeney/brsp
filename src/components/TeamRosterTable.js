@@ -70,8 +70,8 @@ export default function TeamRosterTable({roster, gameDate}) {
         { field: 'Position', headerName: 'Position', width: 10 },
         { field: 'Status', disableExport: true, resizable: true, headerName: 'Status', width: 60 },
         { field: 'pRhythm', headerName: 'Physical', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("P", params.row).display },
-        { field: 'eRhythm', headerName: 'Emotional', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("E", params.row) },
-        { field: 'iRhythm', headerName: 'Intellectual', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("I", params.row) },
+        { field: 'eRhythm', headerName: 'Emotional', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("E", params.row).display },
+        { field: 'iRhythm', headerName: 'Intellectual', resizable: true, width: 120, renderCell: params => getBiorhythmStatus("I", params.row).display },
         { field: 'pAverage', headerName: 'Average', resizable: true, width: 120, renderCell: params => getAverage(params.row).toFixed(2) }
     ];
 
