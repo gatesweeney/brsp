@@ -5,7 +5,7 @@ import TeamRosterTable from "./components/TeamRosterTable";
 import Grid from "@mui/material/Grid";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-//import $ from "jquery";
+import $ from "jquery";
 
 const sportsDataAccessor = new SportsDataAccessor()
 let leagueID = 'mlb';
@@ -77,6 +77,7 @@ function getAllUrlParams(url) {
 
 leagueID = getAllUrlParams().league;
 var h1id = leagueID.toUpperCase();
+$(`#${leagueID}-filters`).addClass('hidden');
 
 function defaultReroute() {
   if (leagueID === undefined) {
@@ -126,6 +127,7 @@ function App() {
     })();
   }, []);
 
+
   return (
     <div>
       <h1 class="title-heading">{h1id} Biorhythms - Games by Date</h1>
@@ -145,7 +147,7 @@ function App() {
             </Grid>
             <Grid xs={14} flexGrow={1} lg={4} item>
               <h3>Filters</h3>
-              <ButtonGroup variant="contained" aria-label="outlined primary button group">
+              <ButtonGroup variant="contained" id="mlb-filters" aria-label="outlined primary button group">
                   <Button onClick="">All</Button>
                   <Button onClick="">Pitchers</Button>
                   <Button onClick="">Hitters</Button>
