@@ -1,10 +1,9 @@
 const pRhythm = [
-    {display:'CRIT', value: undefined},
     {display:'2.00 + ↑ Lo ', value:2.00},
     {display:'3.00 + ↑ -', value:3.00},
     {display:'4.50 + ↑ ', value:4.50},
     {display:'6.00 + ↑ +', value:6.00},
-    {display:'7.00 + ↑ Hi ', value:7.00},
+    {display:'7.50 + ↑ Hi ', value:7.50},
     {display:'7.50 +  Hi ', value:7.50},
     {display:'7.50 +  Hi +', value:7.50},
     {display:'6.00 + ↓ ', value:6.00},
@@ -18,14 +17,14 @@ const pRhythm = [
     {display:'4.00 - ↓ +', value:4.00},
     {display:'5.00 -  Hi ', value:5.00},
     {display:'5.00 -  Hi ', value:5.00},
-    {display:'4.50 - ↑ Hi ', value:4.50},
+    {display:'5.00 - ↑ Hi ', value:5.00},
     {display:'4.00 - ↑ +', value:4.00},
     {display:'3.00 - ↑ ', value:3.00},
-    {display:'2.00 - ↑ -', value:2.00}
+    {display:'2.00 - ↑ -', value:2.00},
+    {display:'CRIT', value: undefined}
 ];
 
 const eRhythm = [
-    {display:'CRIT', value: undefined},
     {display:'2.00 + ↑ Lo', value:2.00},
     {display:'2.00 + ↑ Lo', value:2.00},
     {display:'3.00 + ↑', value:3.00},
@@ -34,7 +33,7 @@ const eRhythm = [
     {display:'6.00 +  +', value:6.00},
     {display:'7.50 +  Hi', value:7.50},
     {display:'7.50 + ↓ Hi', value:7.50},
-    {display:'7.00 + ↓ Hi', value:7.00},
+    {display:'7.50 + ↓ Hi', value:7.50},
     {display:'6.00 + ↓ +', value:6.00},
     {display:'4.50 + ↓', value:4.50},
     {display:'4.50 + ↓', value:4.50},
@@ -48,15 +47,15 @@ const eRhythm = [
     {display:'4.00 -  +', value:4.00},
     {display:'5.00 -  Hi', value:5.00},
     {display:'5.00 - ↑ Hi', value:5.00},
-    {display:'4.50 - ↑ Hi', value:4.50},
+    {display:'5.00 - ↑ Hi', value:5.00},
     {display:'4.00 - ↑', value:4.00},
     {display:'3.00 - ↑', value:3.00},
     {display:'2.00 - ↑', value:2.00},
-    {display:'1.00 -  Lo', value:1.00}
+    {display:'1.00 -  Lo', value:1.00},
+    {display:'CRIT', value: undefined}
 ];
 
 const iRhythm = [
-    {display:'CRIT', value: undefined},
     {display:'2.00 + ↑ Lo', value:2.00},
     {display:'2.00 + ↑ Lo', value:2.00},
     {display:'3.00 + ↑', value:3.00},
@@ -66,7 +65,7 @@ const iRhythm = [
     {display:'6.00 +', value:6.00},
     {display:'7.50 +  Hi', value:7.50},
     {display:'7.50 + ↓ Hi', value:7.50},
-    {display:'7.00 + ↓ Hi', value:7.00},
+    {display:'7.50 + ↓ Hi', value:7.50},
     {display:'6.00 + ↓', value:6.00},
     {display:'4.50 + ↓', value:4.50},
     {display:'4.50 + ↓', value:4.50},
@@ -82,13 +81,14 @@ const iRhythm = [
     {display:'4.00 - ↑', value:4.00},
     {display:'5.00 - ↑ Hi', value:5.00},
     {display:'5.00 - ↑ Hi', value:5.00},
-    {display:'4.50 - ↑ Hi', value:4.50},
+    {display:'5.00 - ↑ Hi', value:5.00},
     {display:'4.00 - ↑', value:4.00},
     {display:'3.00 - ↑', value:3.00},
     {display:'3.00 - ↑', value:3.00},
     {display:'2.00 - ↑', value:2.00},
     {display:'2.00 - ↑', value:2.00},
-    {display:'1.00 - ↑ Lo', value:1.00}
+    {display:'1.00 - ↑ Lo', value:1.00},
+    {display:'CRIT', value: undefined}
 ];
 
 module.exports = {

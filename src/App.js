@@ -5,6 +5,7 @@ import TeamRosterTable from "./components/TeamRosterTable";
 import Grid from "@mui/material/Grid";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import './App.css';
 import $ from "jquery";
 
 const sportsDataAccessor = new SportsDataAccessor()
@@ -76,8 +77,7 @@ function getAllUrlParams(url) {
 }
 
 leagueID = getAllUrlParams().league;
-var h1id = leagueID.toUpperCase();
-$(`#${leagueID}-filters`).addClass('hidden');
+
 
 function defaultReroute() {
   if (leagueID === undefined) {
@@ -91,6 +91,9 @@ function defaultReroute() {
 }
 
 defaultReroute();
+
+var h1id = leagueID.toUpperCase();
+//$(`#${leagueID}-filters`).addClass('hidden');
 
 
 function App() {
@@ -134,7 +137,7 @@ function App() {
 
       {teamsLoaded ? (
           <Grid xs={12} container flexGrow={1} rowSpacing={2}>
-            <Grid xs={14} flexGrow={1} lg={4} item>
+            <Grid xs={14} id="leaguebtns" flexGrow={1} lg={4} item>
               <ButtonGroup variant="contained" aria-label="outlined primary button group">
                   <Button href="/?league=mlb">MLB</Button>
                   <Button href="/?league=nfl">NFL</Button>
@@ -146,14 +149,16 @@ function App() {
               <GameSelector teams={teams} onSubmit={handleSubmit} />
             </Grid>
             <Grid xs={14} flexGrow={1} lg={4} item>
-              <h3>Filters</h3>
+              <h3 class="print">Filters</h3>
               <ButtonGroup variant="contained" id="mlb-filters" aria-label="outlined primary button group">
                   <Button onClick="">All</Button>
                   <Button onClick="">Pitchers</Button>
                   <Button onClick="">Hitters</Button>
               </ButtonGroup>
-              <h4>***Buttons not working at this time.</h4>
-
+              <h4 class="print">^ Buttons not working at this time.</h4>
+              <ButtonGroup variant="contained" class="print" aria-label="outlined primary button group">
+                  <Button onClick={() => {window.print();}}>Print</Button>
+              </ButtonGroup>
             </Grid>
             <Grid xs={12} flexGrow={1} item>
               <h2>Away Team</h2>
@@ -167,7 +172,9 @@ function App() {
             </Grid>
           </Grid>
       ) : (<p>Please wait, Loading the application...</p>)}
+      
     </div>
+    
   );
 }
 

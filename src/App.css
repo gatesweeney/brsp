@@ -13,6 +13,13 @@
   }
 }
 
+@media print {
+  /* This media query only applies itself to the page during printing */
+  h1, .leaguebtn, #leaguebtns, .filterSelector, .print, #mlb-filters, .MuiGrid-grid-lg-true, .MuiButtonBase-root  { 
+    display: none !important; 
+  }
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

@@ -56,6 +56,18 @@ export default function TeamRosterTable({roster, gameDate}) {
         }
     })
 
+    const avgRow = [
+      { id: 1000, player: 'Snow', Position: 'Jon', pAverage: 35 },
+    ];
+
+    function colAverage(columnID, rows) {
+      var total = 0; // Total Calories
+
+      const calories = rows.map((row) => (total += row.calories));
+
+      console.log(calories);
+    }
+
     function customComparator(v1, v2) {
         return sortableValue(v1).localeCompare(sortableValue(v2))
     }
@@ -103,7 +115,7 @@ export default function TeamRosterTable({roster, gameDate}) {
                 break
         }
         const durationSinceBirth = moment.duration(gameDate.diff(moment(player.BirthDate)))
-        const index = Math.floor(durationSinceBirth.asDays() % period)
+        const index = (Math.floor(durationSinceBirth.asDays() - 1) % period)
         if (player.BirthDate && values.length > 0) {
             return values[index]
         }
@@ -131,8 +143,10 @@ export default function TeamRosterTable({roster, gameDate}) {
 
             filterModel={{
                 items: [
-                  { columnField: 'Status', operatorValue: 'contains', value: 'Active' }
+                  { id: 1, columnField: 'Status', operatorValue: 'contains', value: 'Active' },
+                  { id: 2, columnField: 'Status', operatorValue: 'contains', value: '40' }
                 ],
+                // linkOperator: GridLinkOperator.And,
               }}
 
             getRowClassName={(params) =>
@@ -140,6 +154,7 @@ export default function TeamRosterTable({roster, gameDate}) {
             }
 
             />
+
         </div>
     )
 }
