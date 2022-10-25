@@ -76,6 +76,7 @@ function getAllUrlParams(url) {
 }
 
 leagueID = getAllUrlParams().league;
+var h1id = leagueID.toUpperCase();
 
 function defaultReroute() {
   if (leagueID === undefined) {
@@ -112,10 +113,6 @@ function App() {
     setGameDate(gameDate)
   }
 
-  var h1id = leagueID;
-
-  //document.getElementsByClassName("title-heading")[0].innerHTML = leagueID;
-
 
   useEffect(() => {
     (async () => {
@@ -131,8 +128,7 @@ function App() {
 
   return (
     <div>
-      <h1 class="title-heading"></h1>
-      
+      <h1 class="title-heading">{h1id} Biorhythms - Games by Date</h1>
 
       {teamsLoaded ? (
           <Grid xs={12} container flexGrow={1} rowSpacing={2}>
@@ -146,6 +142,15 @@ function App() {
             </Grid>
             <Grid xs={12} flexGrow={1} item>
               <GameSelector teams={teams} onSubmit={handleSubmit} />
+            </Grid>
+            <Grid xs={14} flexGrow={1} lg={4} item>
+              <h3>Filters</h3>
+              <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                  <Button onClick="">All</Button>
+                  <Button onClick="">Pitchers</Button>
+                  <Button onClick="">Hitters</Button>
+              </ButtonGroup>
+
             </Grid>
             <Grid xs={12} flexGrow={1} item>
               <h2>Away Team</h2>
@@ -162,6 +167,7 @@ function App() {
     </div>
   );
 }
+
 
 
 
