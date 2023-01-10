@@ -36,6 +36,18 @@ export default class SportsDataAccessor {
         }
     }
 
+    async getPlayer(PlayerID) {
+        try {
+            let response = await fetch(this.#buildUri(`scores/json/Player/${PlayerID}`))
+            let json = await response.json();
+            console.log(`Get team players response: ${json}`)
+            return { success: true, data: json };
+        } catch (error) {
+            console.log(error);
+            return { success: false };
+        }
+    }
+
     setLeague(league) {
         this.#league = league
     }
