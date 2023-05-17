@@ -5,7 +5,6 @@ import TeamRosterTable from "./components/TeamRosterTable";
 import Grid from "@mui/material/Grid";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import Athlete from '../Athlete';
 import './App.css';
 import $ from "jquery";
 
