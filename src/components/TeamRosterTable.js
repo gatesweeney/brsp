@@ -1,18 +1,19 @@
 import { alpha, styled } from '@mui/material/styles';
-import {DataGrid, gridClasses, GridToolbar} from "@mui/x-data-grid";
+import {DataGridPro, GridActionsCellItem, gridClasses, GridCloseIcon, GridLogicOperator, GridToolbar, useGridApiRef} from "@mui/x-data-grid-pro";
 import moment from "moment";
-import {eRhythm, iRhythm, pRhythm} from "../array";
-
+import {eRhythm, emotionalPeriod, iRhythm, intellectualPeriod, pRhythm, physicalPeriod} from "../array";
+import React, { useEffect, useMemo, useState } from 'react';
+import { PlayerDetailPanel } from './PlayerDetailPanel';
+import { Box, Button, Checkbox, Divider, FormControlLabel, Stack, Typography } from '@mui/material';
 
 export default function TeamRosterTable({roster, gameDate}) {
 
-    const physicalPeriod = 23;
-    const emotionalPeriod = 28;
-    const intellectualPeriod = 33;
+
+    const apiRef = useGridApiRef()
 
     //Alternating Row Styling
     const ODD_OPACITY = 0.2;
-    const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+    const StripedDataGrid = styled(DataGridPro)(({ theme }) => ({
         [`& .${gridClasses.row}.even`]: {
           backgroundColor: theme.palette.grey[200],
           '&:hover, &.Mui-hovered': {
@@ -45,16 +46,11 @@ export default function TeamRosterTable({roster, gameDate}) {
         },
       }));
 
-    const rows = roster.map(player => {
-        return {
-            id: player.PlayerID,
-            pValue: getBiorhythmStatus("P", player),
-            eValue: getBiorhythmStatus("E", player),
-            iValue: getBiorhythmStatus("I", player),
-            avg: getAverage(player),
-            ...player
-        }
-    })
+    const [rows, setRows] = useState([]) 
+
+    const [posFilter, setPosFilter] = useState()
+    const [statusFilter, setStatusFilter] = useState("Active")
+    const [totals, setTotals] = useState({totalAvg: 0, totalPeps: 0})
 
     const avgRow = [
       { id: 1000, player: 'Snow', Position: 'Jon', pAverage: 35 },
@@ -79,17 +75,47 @@ export default function TeamRosterTable({roster, gameDate}) {
     }
 
     const columns = [
-        { field: 'player', headerName: 'Player', width: 150, renderCell: params => getFullName(params) },
-        { field: 'BirthDate', disableExport: true, headerName: 'Birth Date', width: 120, valueFormatter: params => {
+        {
+          field: 'player',
+          headerName: 'Player',
+          width: 150,
+          renderCell: params => getFullName(params),
+          valueGetter: params => params.row.LastName
+        },
+        {
+          field: 'BirthDate',
+          disableExport: true,
+          headerName: 'Birth Date',
+          width: 120,
+          valueFormatter: params => {
             return moment(params.value).format("MMM DD, YYYY")
-        }},
-        { field: 'Position', headerName: 'Position', width: 10 },
-        { field: 'Status', disableExport: true, resizable: true, headerName: 'Status', width: 60 },
-        { field: 'pRhythm', headerName: 'Physical', resizable: true, width: 120, ortComparator: customComparator, valueGetter: params => params.row.pValue.display },
-        { field: 'eRhythm', headerName: 'Emotional', resizable: true, width: 120, sortComparator: customComparator, valueGetter: params => params.row.eValue.display },
-        { field: 'iRhythm', headerName: 'Intellectual', resizable: true, width: 120, sortComparator: customComparator, valueGetter: params => params.row.iValue.display },
-        { field: 'pAverage', headerName: 'Average', resizable: true, width: 120, sortComparator: customComparator, valueGetter: params => params.row.avg.toFixed(2) }
-    ];
+          },
+          editable: true,
+          renderEditCell: v => v.value
+        },
+        { field: 'Position', headerName: 'POS', width: 10, editable: true },
+        { field: 'PositionCategory', headerName: 'P/H', width: 10, editable: true },
+        { field: 'Status', disableExport: true, resizable: true, headerName: 'Status', width: 60, editable: true },
+        { field: 'pRhythm', headerName: 'Physical', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => getBiorhythmStatus("P", params.row), valueFormatter: v => v.value.display },
+        { field: 'eRhythm', headerName: 'Emotional', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => getBiorhythmStatus("E", params.row), valueFormatter: v => v.value.display},
+        { field: 'iRhythm', headerName: 'Intellectual', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => getBiorhythmStatus("I", params.row), valueFormatter: v => v.value.display},
+        { field: 'pAverage', headerName: 'Average', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => params.row.avg?.toFixed(2) ?? ''},
+        { field: 'pep', headerName: 'PEP', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => params.row.pValue?.pep + params.row.eValue?.pep + params.row.iValue?.pep ?? ''},
+        {
+          field: 'actions',
+          type: 'actions',
+          flex: 1,
+          getActions: (params) => [
+            <GridActionsCellItem
+              icon={<GridCloseIcon />}
+              label="Out"
+              onClick={() => {
+                apiRef.current.updateRows([{ id: params.id, _action: 'delete' }])
+              }}
+            />
+          ],
+        },
+      ];
 
 
     function getFullName(params) {
@@ -133,28 +159,82 @@ export default function TeamRosterTable({roster, gameDate}) {
         return average(["P", "E", "I"].flatMap(type => getBiorhythmStatus(type, player)?.value ?? [])) ?? 0;
     }
 
+    useMemo(() => {
+      console.log(rows)
+      var avgs = rows.map(row => row.Status === statusFilter ? row.avg : null)
+      var peps = rows.map(row => row.Status === statusFilter ? row.pValue?.pep + row.eValue?.pep + row.iValue?.pep ?? '' : null)
+      const totalAvg = avgs.reduce((partialSum, a) => partialSum + a, 0)
+      const totalPeps = peps.reduce((partialSum, a) => partialSum + a, 0)
+      console.log(totalPeps, totalAvg)
+      setTotals({totalAvg, totalPeps})
+    }, [rows])
+
+    function ColumnTotals() {
+      setRows(roster.map(player => {
+        return {
+            id: player.PlayerID,
+            pValue: getBiorhythmStatus("P", player),
+            eValue: getBiorhythmStatus("E", player),
+            iValue: getBiorhythmStatus("I", player),
+            avg: getAverage(player),
+            ...player
+        }
+      }))
+
+    }
+
+    useEffect(() => {
+      ColumnTotals()
+    }, [roster, gameDate])
+
     return (
-        <div style={{ }}>
+        <Box>
+            <Stack direction='row' spacing={1}>
+              <Button variant='contained' onClick={e => setPosFilter('')}>All</Button>
+              <Button variant='contained' onClick={e => setPosFilter('P')}>Pitchers</Button>
+              <Button variant='contained' onClick={e => setPosFilter('')}>Hitters</Button>
+              <FormControlLabel control={<Checkbox onChange={e => e.target.checked ? setStatusFilter("") : setStatusFilter("Active")}/>} label="Show Full Roster" />
+            </Stack>
+            <br></br>
             <StripedDataGrid 
             components={{ Toolbar: GridToolbar }}
+            apiRef={apiRef}
             autoHeight
             rowHeight={25}
-            columns={columns} rows={rows}
-
-            filterModel={{
-                items: [
-                  { id: 1, columnField: 'Status', operatorValue: 'contains', value: 'Active' },
-                  { id: 2, columnField: 'Status', operatorValue: 'contains', value: '40' }
-                ],
-                // linkOperator: GridLinkOperator.And,
-              }}
-
+            columns={columns}
+            rows={rows}
+            getDetailPanelHeight={() => 'auto'}
+            getDetailPanelContent={row => <PlayerDetailPanel row={row} gameDate={gameDate} />}
+            initialState={{
+              sorting: {
+                sortModel: [{ field: 'player', sort: 'asc' }],
+              },
+              filter: {
+                filterModel: {
+                  items: [
+                    { id:1, field: 'Status', operator: 'equals', value: statusFilter },
+                    { id:2, field: 'PositionCategory', operator: 'equals', value: posFilter }
+                  ],
+                  logicOperator: GridLogicOperator.And,
+                },
+              },
+            }}
             getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
             }
 
             />
-
-        </div>
+            <br></br>
+            <Typography variant='h4'>Totals</Typography>
+            <Divider/>
+            <Typography variant='h6'>Averages: {totals.totalAvg.toFixed(2)} | PEPs: {totals.totalPeps}</Typography>
+            <br></br>
+          <Button variant='contained' onClick={
+            e=> {
+              var rows = apiRef.current.getRowsCount()
+              apiRef.current.updateRows([{id: rows + 1, item: 'new item', Status: 'Active', BirthDate: "1987-11-08T00:00:00"}]);
+            }
+            }>Add Player Manually</Button>
+        </Box>
     )
 }

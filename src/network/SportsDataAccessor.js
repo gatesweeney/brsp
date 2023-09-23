@@ -16,7 +16,6 @@ export default class SportsDataAccessor {
         try {
             let response = await fetch(this.#buildUri('scores/json/teams'));
             let json = await response.json();
-            console.log(`Get active teams response: ${json}`)
             return { success: true, data: json };
         } catch (error) {
             console.log(error);
@@ -28,7 +27,6 @@ export default class SportsDataAccessor {
         try {
             let response = await fetch(this.#buildUri(`scores/json/Players/${teamKey}`))
             let json = await response.json();
-            console.log(`Get team players response: ${json}`)
             return { success: true, data: json };
         } catch (error) {
             console.log(error);

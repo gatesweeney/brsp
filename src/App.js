@@ -7,6 +7,9 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import './App.css';
 import $ from "jquery";
+import { LicenseInfo } from '@mui/x-license-pro';
+
+LicenseInfo.setLicenseKey('37dc94c65fbb348da71d210a58a696a5Tz03Mjk0MSxFPTE3MjM5MTU3NjAwMDAsUz1wcm8sTE09c3Vic2NyaXB0aW9uLEtWPTI=');
 
 const sportsDataAccessor = new SportsDataAccessor()
 let leagueID = 'mlb';
@@ -76,7 +79,8 @@ function getAllUrlParams(url) {
   return obj;
 }
 
-leagueID = getAllUrlParams().league;
+leagueID = getAllUrlParams().league
+
 
 
 function defaultReroute() {
@@ -133,10 +137,10 @@ function App() {
 
   return (
     <div>
-      <h1 class="title-heading">{h1id} Biorhythms - Games by Date</h1>
+      <h1 className="title-heading">{h1id} Biorhythms - Games by Date</h1>
 
       {teamsLoaded ? (
-          <Grid xs={12} container flexGrow={1} rowSpacing={2}>
+          <Grid container flexGrow={1} rowSpacing={2}>
             <Grid xs={14} id="leaguebtns" flexGrow={1} lg={4} item>
               <ButtonGroup variant="contained" aria-label="outlined primary button group">
                   <Button href="/?league=mlb">MLB</Button>
@@ -149,14 +153,7 @@ function App() {
               <GameSelector teams={teams} onSubmit={handleSubmit} />
             </Grid>
             <Grid xs={14} flexGrow={1} lg={4} item>
-              <h3 class="print">Filters</h3>
-              <ButtonGroup variant="contained" id="mlb-filters" aria-label="outlined primary button group">
-                  <Button onClick="">All</Button>
-                  <Button onClick="">Pitchers</Button>
-                  <Button onClick="">Hitters</Button>
-              </ButtonGroup>
-              <h4 class="print">^ Buttons not working at this time.</h4>
-              <ButtonGroup variant="contained" class="print" aria-label="outlined primary button group">
+              <ButtonGroup variant="contained" className="print" aria-label="outlined primary button group">
                   <Button onClick={() => {window.print();}}>Print</Button>
               </ButtonGroup>
             </Grid>
