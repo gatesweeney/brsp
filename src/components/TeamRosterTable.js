@@ -62,7 +62,7 @@ export default function TeamRosterTable({roster, gameDate}) {
       const calories = rows.map((row) => (total += row.calories));
 
       console.log(calories);
-    }
+    } 
 
     function customComparator(v1, v2) {
         return sortableValue(v1).localeCompare(sortableValue(v2))
@@ -79,6 +79,7 @@ export default function TeamRosterTable({roster, gameDate}) {
           field: 'player',
           headerName: 'Player',
           width: 150,
+          editable: true,
           renderCell: params => getFullName(params),
           valueGetter: params => params.row.LastName
         },
@@ -95,12 +96,12 @@ export default function TeamRosterTable({roster, gameDate}) {
         },
         { field: 'Position', headerName: 'POS', width: 10, editable: true },
         { field: 'PositionCategory', headerName: 'P/H', width: 10, editable: true },
-        { field: 'Status', disableExport: true, resizable: true, headerName: 'Status', width: 60, editable: true },
+        { field: 'Status', disableExport: true, resizable: true, headerName: 'Status', width: 60 },
         { field: 'pRhythm', headerName: 'Physical', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => getBiorhythmStatus("P", params.row), valueFormatter: v => v.value.display },
         { field: 'eRhythm', headerName: 'Emotional', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => getBiorhythmStatus("E", params.row), valueFormatter: v => v.value.display},
         { field: 'iRhythm', headerName: 'Intellectual', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => getBiorhythmStatus("I", params.row), valueFormatter: v => v.value.display},
-        { field: 'pAverage', headerName: 'Average', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => params.row.avg?.toFixed(2) ?? ''},
-        { field: 'pep', headerName: 'PEP', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => params.row.pValue?.pep + params.row.eValue?.pep + params.row.iValue?.pep ?? ''},
+        { field: 'pAverage', headerName: 'AVG', resizable: true, width: 1, sortComparator: customComparator, valueGetter: params => params.row.avg?.toFixed(2) ?? ''},
+        { field: 'pep', headerName: 'PEP', resizable: true, width: 1, sortComparator: customComparator, valueGetter: params => params.row.pValue?.pep + params.row.eValue?.pep + params.row.iValue?.pep ?? ''},
         {
           field: 'actions',
           type: 'actions',
@@ -160,12 +161,10 @@ export default function TeamRosterTable({roster, gameDate}) {
     }
 
     useMemo(() => {
-      console.log(rows)
       var avgs = rows.map(row => row.Status === statusFilter ? row.avg : null)
       var peps = rows.map(row => row.Status === statusFilter ? row.pValue?.pep + row.eValue?.pep + row.iValue?.pep ?? '' : null)
       const totalAvg = avgs.reduce((partialSum, a) => partialSum + a, 0)
       const totalPeps = peps.reduce((partialSum, a) => partialSum + a, 0)
-      console.log(totalPeps, totalAvg)
       setTotals({totalAvg, totalPeps})
     }, [rows])
 
@@ -218,6 +217,11 @@ export default function TeamRosterTable({roster, gameDate}) {
                   logicOperator: GridLogicOperator.And,
                 },
               },
+              columns: {
+                columnVisibilityModel: {
+                  PositionCategory: false,
+                },
+              },
             }}
             getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
@@ -232,7 +236,7 @@ export default function TeamRosterTable({roster, gameDate}) {
           <Button variant='contained' onClick={
             e=> {
               var rows = apiRef.current.getRowsCount()
-              apiRef.current.updateRows([{id: rows + 1, item: 'new item', Status: 'Active', BirthDate: "1987-11-08T00:00:00"}]);
+              apiRef.current.updateRows([{id: rows + 1, LastName: 'Z', item: 'new item', Status: 'Active', BirthDate: "1987-11-08T00:00:00"}]);
             }
             }>Add Player Manually</Button>
         </Box>

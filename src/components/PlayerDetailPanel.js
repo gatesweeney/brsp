@@ -33,6 +33,8 @@ export function PlayerDetailPanel(params) {
     const columns = [
         {
             field: 'id',
+            headerName: 'Day',
+            width: 2
         },
         {
             field: 'date',
@@ -60,6 +62,12 @@ export function PlayerDetailPanel(params) {
             headerName: "Intellectual",
             flex: 1,
             valueGetter: v => v.row.iRhythm.display,
+        },
+        {
+            field: 'average',
+            headerName: "AVG",
+            flex: 1,
+            valueGetter: v => ((v.row.eRhythm.value ?? '' + v.row.pRhythm.value ?? '' + v.row.iRhythm.value ?? '' ) / 3).toFixed(2),
         },
     ]
     const ODD_OPACITY = 0.2;
@@ -219,7 +227,14 @@ export function PlayerDetailPanel(params) {
                 />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-               
+            <LineChart
+                xAxis={[{ data: rows.map(r => r.date) }]}
+                series={[
+                    { data: rows.map(r => r.eRhythm.value ?? 0) }
+                ]}
+                width={500}
+                height={300}
+            />
             </CustomTabPanel>
           </Box>
         );

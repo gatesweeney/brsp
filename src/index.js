@@ -13,7 +13,7 @@ root.render(
     <LocalizationProvider dateAdapter={AdapterMoment}>
         <Grid container spacing={0} columns={12}>
             <Grid item m lg />
-            <Grid item xs={12} m={10} lg={8}>
+            <Grid item xs={1} m={10} lg={18}>
                 <App />
             </Grid>
             <Grid item m lg />
