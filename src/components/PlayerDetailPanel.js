@@ -227,14 +227,7 @@ export function PlayerDetailPanel(params) {
                 />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-            <LineChart
-                xAxis={[{ data: rows.map(r => r.date) }]}
-                series={[
-                    { data: rows.map(r => r.eRhythm.value ?? 0) }
-                ]}
-                width={500}
-                height={300}
-            />
+                Coming Soon
             </CustomTabPanel>
           </Box>
         );
