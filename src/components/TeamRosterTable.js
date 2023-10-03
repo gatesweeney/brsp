@@ -11,7 +11,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export default function TeamRosterTable({roster, gameDate}) {
 
-
     const apiRef = useGridApiRef()
 
     //Alternating Row Styling
@@ -318,6 +317,11 @@ export default function TeamRosterTable({roster, gameDate}) {
             rowHeight={25}
             columns={columns}
             rows={rows}
+            slotProps={{
+              toolbar: {
+                csvOptions: { fileName: [roster?.[0]?.Team, gameDate?.format('YYYY-MM-DD')].join('-') },
+              }
+            }}
             getDetailPanelHeight={() => 'auto'}
             getDetailPanelContent={row => <PlayerDetailPanel row={row} gameDate={gameDate} />}
             initialState={{
