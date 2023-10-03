@@ -1,10 +1,13 @@
 import { alpha, styled } from '@mui/material/styles';
-import {DataGridPro, GridActionsCellItem, gridClasses, GridCloseIcon, GridLogicOperator, GridToolbar, useGridApiRef} from "@mui/x-data-grid-pro";
+import {DataGridPro, GridActionsCellItem, gridClasses, GridCloseIcon, gridFilteredRowsLookupSelector, gridFilteredSortedRowIdsSelector, GridLogicOperator, GridToolbar, useGridApiRef} from "@mui/x-data-grid-pro";
 import moment from "moment";
 import {eRhythm, emotionalPeriod, iRhythm, intellectualPeriod, pRhythm, physicalPeriod} from "../array";
 import React, { useEffect, useMemo, useState } from 'react';
 import { PlayerDetailPanel } from './PlayerDetailPanel';
-import { Box, Button, Checkbox, Divider, FormControlLabel, Stack, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Chip, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, Select, Stack, TextField, Typography } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 
 export default function TeamRosterTable({roster, gameDate}) {
 
@@ -50,7 +53,7 @@ export default function TeamRosterTable({roster, gameDate}) {
 
     const [posFilter, setPosFilter] = useState()
     const [statusFilter, setStatusFilter] = useState("Active")
-    const [totals, setTotals] = useState({totalAvg: 0, totalPeps: 0})
+    const [totals, setTotals] = useState([])
 
     const avgRow = [
       { id: 1000, player: 'Snow', Position: 'Jon', pAverage: 35 },
@@ -66,6 +69,67 @@ export default function TeamRosterTable({roster, gameDate}) {
 
     function customComparator(v1, v2) {
         return sortableValue(v1).localeCompare(sortableValue(v2))
+    }
+    
+
+    function AddPlayerModal() {
+      const [open, setOpen] = React.useState(false);
+      const handleOpen = () => setOpen(true);
+      const handleClose = () => setOpen(false);
+
+      const [firstName, setFirstName] = useState()
+      const [lastName, setLastName] = useState()
+      const [birthday, setBirthday] = useState()
+      const [pos, setPos] = useState()
+
+      const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
+    
+      return (
+        <div>
+          <Button variant='contained' color='warning' onClick={handleOpen}>Add Player Manually</Button>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Stack spacing={2}>
+                <TextField label="First Name" value={firstName} onChange={e => setFirstName(e.target.value)}/>
+                <TextField label="Last Name" value={lastName} onChange={e => setLastName(e.target.value)}/>
+                <DatePicker
+                    label="Birthday"
+                    fullWidth
+                    value={birthday}
+                    onChange={setBirthday}
+                    renderInput={(params) => <TextField fullWidth {...params} />}
+                />
+                <FormControl fullWidth>
+                  <InputLabel>Position</InputLabel>
+                  <Select
+                    value={pos}
+                    label="Position"
+                    onChange={setPos}
+                  >
+                    <MenuItem value={"P"}>Pitcher</MenuItem>
+                    <MenuItem value={"H"}>Hitter</MenuItem>
+                  </Select>
+                </FormControl>
+              </Stack>
+            </Box>
+          </Modal>
+        </div>
+      );
     }
 
     function sortableValue(value) {
@@ -101,7 +165,24 @@ export default function TeamRosterTable({roster, gameDate}) {
         { field: 'eRhythm', headerName: 'Emotional', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => getBiorhythmStatus("E", params.row), valueFormatter: v => v.value.display},
         { field: 'iRhythm', headerName: 'Intellectual', resizable: true, flex: 1, sortComparator: customComparator, valueGetter: params => getBiorhythmStatus("I", params.row), valueFormatter: v => v.value.display},
         { field: 'pAverage', headerName: 'AVG', resizable: true, width: 1, sortComparator: customComparator, valueGetter: params => params.row.avg?.toFixed(2) ?? ''},
+        { field: 'pPep', headerName: 'PP', resizable: true, width: 1, sortComparator: customComparator, valueGetter: params => params.row.pValue.pep},
+        { field: 'ePep', headerName: 'EP', resizable: true, width: 1, sortComparator: customComparator, valueGetter: params => params.row.eValue.pep},
+        { field: 'iPep', headerName: 'IP', resizable: true, width: 1, sortComparator: customComparator, valueGetter: params => params.row.iValue.pep},
         { field: 'pep', headerName: 'PEP', resizable: true, width: 1, sortComparator: customComparator, valueGetter: params => params.row.pValue?.pep + params.row.eValue?.pep + params.row.iValue?.pep ?? ''},
+        { field: 'totalPoints', headerName: 'Total', resizable: true, flex: 1, sortComparator: customComparator,
+          valueGetter: params => (params.row.avg + params.row.pValue?.pep + params.row.eValue?.pep + params.row.iValue?.pep ?? '').toFixed(2),
+          renderCell: params => {
+            if (params.value > 6.75) {
+              return <Chip color='primary' label={params.value}></Chip>
+            } else if (params.value > 10) {
+              return <Chip color='success' label={params.value}></Chip>
+            } else if (params.value < 6.75) {
+              return <Chip color='warning' label={params.value}></Chip>
+            } else if (params.value === 6.75) {
+              return <Chip label={params.value}></Chip>
+            }
+          },
+        },
         {
           field: 'actions',
           type: 'actions',
@@ -160,15 +241,44 @@ export default function TeamRosterTable({roster, gameDate}) {
         return average(["P", "E", "I"].flatMap(type => getBiorhythmStatus(type, player)?.value ?? [])) ?? 0;
     }
 
+
+    //TOTALS
     useMemo(() => {
+
+      var emo = rows.map(row => row.eValue.value)
+      var phy = rows.map(row => row.pValue.value)
+      var int = rows.map(row => row.iValue.value)
+
+      var emoPeps = rows.map(row => row.eValue.pep)
+      var phyPeps = rows.map(row => row.pValue.pep)
+      var intPeps = rows.map(row => row.iValue.pep)
+
       var avgs = rows.map(row => row.Status === statusFilter ? row.avg : null)
       var peps = rows.map(row => row.Status === statusFilter ? row.pValue?.pep + row.eValue?.pep + row.iValue?.pep ?? '' : null)
+
+      const totalE = emo.reduce((partialSum, a) => partialSum + a, 0)
+      const totalP = phy.reduce((partialSum, a) => partialSum + a, 0)
+      const totalI = int.reduce((partialSum, a) => partialSum + a, 0)
+      const totalEPeps = emoPeps.reduce((partialSum, a) => partialSum + a, 0)
+      const totalPPeps = phyPeps.reduce((partialSum, a) => partialSum + a, 0)
+      const totalIPeps = intPeps.reduce((partialSum, a) => partialSum + a, 0)
       const totalAvg = avgs.reduce((partialSum, a) => partialSum + a, 0)
       const totalPeps = peps.reduce((partialSum, a) => partialSum + a, 0)
-      setTotals({totalAvg, totalPeps})
+
+      
+      setTotals([
+        {name: 'Physical', value: totalP},
+        {name: 'Emotional', value: totalE},
+        {name: 'Intellectual', value: totalI},
+        {name: 'PP', value: totalPPeps},
+        {name: 'EP', value: totalEPeps},
+        {name: 'IP', value: totalIPeps},
+        {name: 'Average', value: totalAvg},
+        {name: 'PEPs', value: totalPeps},
+      ])
     }, [rows])
 
-    function ColumnTotals() {
+    function RowMod() {
       setRows(roster.map(player => {
         return {
             id: player.PlayerID,
@@ -180,10 +290,14 @@ export default function TeamRosterTable({roster, gameDate}) {
         }
       }))
 
+      const paginationModel = gridFilteredSortedRowIdsSelector(apiRef);
+
+      console.log(paginationModel)
+
     }
 
     useEffect(() => {
-      ColumnTotals()
+        RowMod()
     }, [roster, gameDate])
 
     return (
@@ -198,6 +312,8 @@ export default function TeamRosterTable({roster, gameDate}) {
             <StripedDataGrid 
             components={{ Toolbar: GridToolbar }}
             apiRef={apiRef}
+            checkboxSelection
+            disableRowSelectionOnClick
             autoHeight
             rowHeight={25}
             columns={columns}
@@ -231,14 +347,11 @@ export default function TeamRosterTable({roster, gameDate}) {
             <br></br>
             <Typography variant='h4'>Totals</Typography>
             <Divider/>
-            <Typography variant='h6'>Averages: {totals.totalAvg.toFixed(2)} | PEPs: {totals.totalPeps}</Typography>
+            <Stack sx={{marginTop: 2}} direction='row' spacing={2} divider={ <Divider orientation='vertical' flexItem /> }>
+              {totals.map(t => <Typography variant='p'>{t.name}: <strong>{t.value.toFixed(2)}</strong></Typography>)}
+            </Stack>
             <br></br>
-          <Button variant='contained' onClick={
-            e=> {
-              var rows = apiRef.current.getRowsCount()
-              apiRef.current.updateRows([{id: rows + 1, LastName: 'Z', item: 'new item', Status: 'Active', BirthDate: "1987-11-08T00:00:00"}]);
-            }
-            }>Add Player Manually</Button>
+            <AddPlayerModal/>
         </Box>
     )
 }

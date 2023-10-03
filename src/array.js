@@ -14,7 +14,7 @@ const pRhythm = [
     {display:'4.50 + ↓ Avg', value:4.50, pep: 1},
     {display:'3.00 + ↓ Avg -', value:3.00, pep: 1},
     {display:'2.00 + ↓ Lo ', value:2.00, pep: 1},
-    {display:'CRIT', value: undefined, pep: 1},
+    {display:'CRIT', value: null, pep: 1},
     {display:'1.00 - ↓ Lo', value:1.00, pep: 0},
     {display:'2.00 - ↓ Avg -', value:2.00, pep: 0},
     {display:'3.00 - ↓ Avg', value:3.00, pep: 0},
@@ -25,7 +25,7 @@ const pRhythm = [
     {display:'3.00 - ↑ Avg', value:3.00, pep: 1},
     {display:'2.00 - ↑ Avg -', value:2.00, pep: 1},
     {display:'1.00 - ↑ Lo', value:1.00, pep: 1},
-    {display:'CRIT', value: undefined, pep: 1}
+    {display:'CRIT', value: null, pep: 1}
 ];
 
 const eRhythm = [
@@ -43,7 +43,7 @@ const eRhythm = [
     {display:'4.50 + ↓ Avg', value:4.50, pep: 1},
     {display:'3.00 + ↓ Avg -', value:3.00, pep: 1},
     {display:'2.00 + ↓ Lo', value:2.00, pep: 1},
-    {display:'CRIT', value: undefined, pep: 1},
+    {display:'CRIT', value: null, pep: 1},
     {display:'1.00 - ↓ Lo', value:1.00, pep: 0},
     {display:'2.00 - ↓ Avg -', value:2.00, pep: 0},
     {display:'3.00 - ↓ Avg', value:3.00, pep: 0},
@@ -56,7 +56,7 @@ const eRhythm = [
     {display:'3.00 - ↑ Avg', value:3.00, pep: 1},
     {display:'2.00 - ↑ Avg -', value:2.00, pep: 1},
     {display:'1.00 - ↑ Lo', value:1.00, pep: 1},
-    {display:'CRIT', value: undefined, pep: 1}
+    {display:'CRIT', value: null, pep: 1}
 ];
 
 const iRhythm = [
@@ -76,7 +76,7 @@ const iRhythm = [
     {display:'3.00 + ↓ Avg -', value:3.00, pep: 1},
     {display:'3.00 + ↓ Avg -', value:3.00, pep: 1},
     {display:'2.00 + ↓ Lo', value:2.00, pep: 1},
-    {display:'CRIT', value: undefined, pep: 1},
+    {display:'CRIT', value: null, pep: 1},
     {display:'1.00 - ↓ Lo', value:1.00, pep: 0},
     {display:'1.00 - ↓ Lo', value:1.00, pep: 0},
     {display:'2.00 - ↓ Avg -', value:2.00, pep: 0},
@@ -92,7 +92,7 @@ const iRhythm = [
     {display:'2.00 - ↑ Avg -', value:2.00, pep: 1},
     {display:'2.00 - ↑ Avg -', value:2.00, pep: 1},
     {display:'1.00 - ↑ Lo', value:1.00, pep: 1},
-    {display:'CRIT', value: undefined, pep: 1}
+    {display:'CRIT', value: null, pep: 1}
 ];
 
 module.exports = {
