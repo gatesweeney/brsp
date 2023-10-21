@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { alpha, styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import moment from "moment/moment";
-import { DataGridPro, useGridApiRef } from "@mui/x-data-grid-pro";
+import { DataGridPremium, useGridApiRef } from "@mui/x-data-grid-premium";
 import { eRhythm, emotionalPeriod, iRhythm, intellectualPeriod, pRhythm, physicalPeriod } from "../array";
 import { LineChart } from "@mui/x-charts";
 
@@ -71,7 +71,7 @@ export function PlayerDetailPanel(params) {
         },
     ]
     const ODD_OPACITY = 0.2;
-    const StripedDataGrid = styled(DataGridPro)(({ theme }) => ({
+    const StripedDataGrid = styled(DataGridPremium)(({ theme }) => ({
         [`& .${gridClasses.row}.even`]: {
           backgroundColor: theme.palette.grey[200],
           '&:hover, &.Mui-hovered': {

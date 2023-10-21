@@ -6,9 +6,9 @@ import Grid from "@mui/material/Grid";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import './App.css';
-import { LicenseInfo } from '@mui/x-license-pro';
+//import { LicenseInfo } from '@mui/x-license-pro';
 
-LicenseInfo.setLicenseKey('37dc94c65fbb348da71d210a58a696a5Tz03Mjk0MSxFPTE3MjM5MTU3NjAwMDAsUz1wcm8sTE09c3Vic2NyaXB0aW9uLEtWPTI=');
+//LicenseInfo.setLicenseKey('37dc94c65fbb348da71d210a58a696a5Tz03Mjk0MSxFPTE3MjM5MTU3NjAwMDAsUz1wcm8sTE09c3Vic2NyaXB0aW9uLEtWPTI=');
 
 const sportsDataAccessor = new SportsDataAccessor()
 let leagueID = 'mlb';

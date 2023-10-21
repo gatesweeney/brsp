@@ -1,5 +1,6 @@
 import { alpha, styled } from '@mui/material/styles';
-import {DataGridPro, GridActionsCellItem, gridClasses, GridCloseIcon, gridFilteredRowsLookupSelector, gridFilteredSortedRowIdsSelector, GridLogicOperator, GridToolbar, useGridApiRef} from "@mui/x-data-grid-pro";
+import {DataGridPremium, GridActionsCellItem, gridClasses, GridCloseIcon, GridLogicOperator, GridToolbar, useGridApiRef} from "@mui/x-data-grid-premium";
+
 import moment from "moment";
 import {eRhythm, emotionalPeriod, iRhythm, intellectualPeriod, pRhythm, physicalPeriod} from "../array";
 import React, { useEffect, useMemo, useState } from 'react';
@@ -15,7 +16,7 @@ export default function TeamRosterTable({roster, gameDate}) {
 
     //Alternating Row Styling
     const ODD_OPACITY = 0.2;
-    const StripedDataGrid = styled(DataGridPro)(({ theme }) => ({
+    const StripedDataGrid = styled(DataGridPremium)(({ theme }) => ({
         [`& .${gridClasses.row}.even`]: {
           backgroundColor: theme.palette.grey[200],
           '&:hover, &.Mui-hovered': {
@@ -198,6 +199,10 @@ export default function TeamRosterTable({roster, gameDate}) {
         },
       ];
 
+      const aggregationModel = {
+        pep: 'sum', 
+      }
+
 
     function getFullName(params) {
         return `${params.row.LastName || ''}, ${params.row.FirstName || ''}`;
@@ -289,9 +294,7 @@ export default function TeamRosterTable({roster, gameDate}) {
         }
       }))
 
-      const paginationModel = gridFilteredSortedRowIdsSelector(apiRef);
 
-      console.log(paginationModel)
 
     }
 
@@ -309,7 +312,6 @@ export default function TeamRosterTable({roster, gameDate}) {
             </Stack>
             <br></br>
             <StripedDataGrid 
-            components={{ Toolbar: GridToolbar }}
             apiRef={apiRef}
             checkboxSelection
             disableRowSelectionOnClick
@@ -317,6 +319,9 @@ export default function TeamRosterTable({roster, gameDate}) {
             rowHeight={25}
             columns={columns}
             rows={rows}
+            slots={{
+              toolbar: GridToolbar,
+            }}
             slotProps={{
               toolbar: {
                 csvOptions: { fileName: [roster?.[0]?.Team, gameDate?.format('YYYY-MM-DD')].join('-') },
@@ -341,6 +346,9 @@ export default function TeamRosterTable({roster, gameDate}) {
                 columnVisibilityModel: {
                   PositionCategory: false,
                 },
+              },
+              aggregation: {
+                model: aggregationModel
               },
             }}
             getRowClassName={(params) =>
